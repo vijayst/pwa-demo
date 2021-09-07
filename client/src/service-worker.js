@@ -62,14 +62,6 @@ registerRoute(
     })
 );
 
-registerRoute('http://localhost:4000/hospitals', (args) => {
-    return fetch(args.event.request.url).then((response) => {
-        // save data in indexedDB
-        if (!response.ok) return Promise.reject();
-        return response;
-    });
-});
-
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', (event) => {
