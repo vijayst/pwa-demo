@@ -5,7 +5,7 @@ import './App.css';
 function App() {
     const [hospitals, setHospitals] = useState([]);
     useEffect(() => {
-        axios.get('http://localhost:5000/hospitals').then((response) => {
+        axios.get('http://localhost:4000/hospitals').then((response) => {
             setHospitals(response.data);
         });
     }, []);
