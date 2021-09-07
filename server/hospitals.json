@@ -1,0 +1,26 @@
+[
+    {
+        "id": "1",
+        "name": "Fortis hospitals",
+        "specialities": 20,
+        "doctors": 100,
+        "surgeries": 50,
+        "bedCount": 500
+    },
+    {
+        "id": "2",
+        "name": "Pranav eyecare",
+        "specialities": 1,
+        "doctors": 3,
+        "surgeries": 10,
+        "bedCount": 0
+    },
+    {
+        "id": "3",
+        "name": "Trivantha clinic",
+        "specialities": 0,
+        "doctors": 0,
+        "surgeries": 0,
+        "bedCount": 0
+    }
+]
