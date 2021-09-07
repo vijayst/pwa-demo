@@ -8,10 +8,32 @@ function App() {
         axios
             .get('http://localhost:4000/hospitals')
             .then((response) => {
+                const dbOpenRequest = indexedDB.open('hospitalDB', 1);
+                dbOpenRequest.onupgradeneeded = function (event) {
+                    const db = event.target.result;
+                    db.createObjectStore('hospitalStore', { keyPath: 'id' });
+                };
+                dbOpenRequest.onsuccess = function (event) {
+                    const db = event.target.result;
+                    const txn = db.transaction('hospitalStore', 'readwrite');
+                    const store = txn.objectStore('hospitalStore');
+                    response.data.forEach((hospital) => {
+                        store.add(hospital);
+                    });
+                };
                 setHospitals(response.data);
             })
-            .catch((err) => {
-                console.log('error', err);
+            .catch(() => {
+                const dbOpenRequest = indexedDB.open('hospitalDB', 1);
+                dbOpenRequest.onsuccess = function (event) {
+                    const db = event.target.result;
+                    const txn = db.transaction('hospitalStore', 'readonly');
+                    const store = txn.objectStore('hospitalStore');
+                    const getAllRequest = store.getAll();
+                    getAllRequest.onsuccess = function () {
+                        setHospitals(getAllRequest.result);
+                    };
+                };
             });
     }, []);
     return (
