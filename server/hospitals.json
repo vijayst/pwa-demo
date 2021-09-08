@@ -18,8 +18,8 @@
     {
         "id": "3",
         "name": "Trivantha clinic",
-        "specialities": 0,
-        "doctors": 0,
+        "specialities": 1,
+        "doctors": 2,
         "surgeries": 0,
         "bedCount": 0
     }
