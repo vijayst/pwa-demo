@@ -17,9 +17,12 @@ function App() {
                     const db = event.target.result;
                     const txn = db.transaction('hospitalStore', 'readwrite');
                     const store = txn.objectStore('hospitalStore');
-                    response.data.forEach((hospital) => {
-                        store.add(hospital);
-                    });
+                    const clearRequest = store.clear();
+                    clearRequest.onsuccess = function () {
+                        response.data.forEach((hospital) => {
+                            store.add(hospital);
+                        });
+                    };
                 };
                 setHospitals(response.data);
             })
