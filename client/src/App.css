@@ -59,3 +59,15 @@
     border-color: skyblue;
     border-style: solid;
 }
+
+.message {
+    position: fixed;
+    width: 100%;
+    max-width: 40rem;
+    top: 0;
+    margin: 0 auto;
+    background-color: springgreen;
+    color: white;
+    font-weight: bold;
+    padding: 1rem;
+}

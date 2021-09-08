@@ -6,13 +6,20 @@ function App() {
     const [hospitals, setHospitals] = useState([]);
     const [activeId, setActiveId] = useState();
     const [hospitalData, setHospitalData] = useState({
+        id: null,
+        name: '',
         specialities: 0,
         doctors: 0,
         surgeries: 0,
         bedCount: 0,
     });
+    const [message, setMessage] = useState();
 
     useEffect(() => {
+        fetchHospitals();
+    }, []);
+
+    function fetchHospitals() {
         axios
             .get('http://localhost:4000/hospitals')
             .then((response) => {
@@ -46,7 +53,7 @@ function App() {
                     };
                 };
             });
-    }, []);
+    }
 
     function handleEditClick(hospital) {
         setActiveId(hospital.id);
@@ -66,7 +73,41 @@ function App() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        console.log('submitting');
+        axios
+            .post(`http://localhost:4000/hospital/${activeId}`, hospitalData)
+            .then(() => {
+                setMessage('Data saved successfully');
+                setActiveId(null);
+                fetchHospitals();
+                setTimeout(() => {
+                    setMessage(null);
+                }, 5000);
+            })
+            .catch(() => {
+                setMessage('Data saved for syncing');
+                setActiveId(null);
+                setHospitals((hospitals) => {
+                    const index = hospitals.findIndex(
+                        (h) => h.id === hospitalData.id
+                    );
+                    if (index !== -1) {
+                        const newHospitals = hospitals.slice();
+                        newHospitals[index] = hospitalData;
+                        return newHospitals;
+                    }
+                    return hospitals;
+                });
+                const dbOpenRequest = indexedDB.open('hospitalDB', 1);
+                dbOpenRequest.onsuccess = function (event) {
+                    const db = event.target.result;
+                    const txn = db.transaction('hospitalStore', 'readwrite');
+                    const store = txn.objectStore('hospitalStore');
+                    store.put(hospitalData);
+                };
+                setTimeout(() => {
+                    setMessage(null);
+                }, 5000);
+            });
     }
 
     return (
@@ -147,6 +188,7 @@ function App() {
                     </div>
                 )
             )}
+            {message && <div className="message">{message}</div>}
         </div>
     );
 }

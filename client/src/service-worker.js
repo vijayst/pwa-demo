@@ -11,7 +11,8 @@ import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+import { StaleWhileRevalidate, NetworkOnly } from 'workbox-strategies';
+import { BackgroundSyncPlugin } from 'workbox-background-sync';
 
 clientsClaim();
 
@@ -71,3 +72,12 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
+const bgSyncPlugin = new BackgroundSyncPlugin('hospital-queue');
+
+registerRoute(
+    /.*\/hospital\/.*/,
+    new NetworkOnly({
+        plugins: [bgSyncPlugin],
+    }),
+    'POST'
+);
